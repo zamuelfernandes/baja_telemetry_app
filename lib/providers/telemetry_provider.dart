@@ -1,6 +1,7 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -80,7 +81,7 @@ class TelemetryProvider with ChangeNotifier {
         return 'Permissão de armazenamento negada';
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('ERRO EM TOGGLESAVING CSV:\n${e.toString()}');
       return 'Erro ao salvar dados';
     } finally {
       notifyListeners();
@@ -158,10 +159,17 @@ class TelemetryProvider with ChangeNotifier {
       final csvData = StringBuffer();
       csvData.writeln('Timestamp,Speed (km/h),Temp (°C),RPM');
 
+      // Formata o Timestamp
+      final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss'); // Formato desejado
+
       for (var data in _savedData) {
+        final timestamp =
+            DateTime.fromMillisecondsSinceEpoch(data['timestamp']!.toInt());
+        final formattedTimestamp =
+            dateFormat.format(timestamp); // Formata o Timestamp
+
         csvData.writeln(
-          '${data['timestamp']},${data['speed']},${data['temp']},${data['rpm']}',
-        );
+            '$formattedTimestamp,${data['speed']},${data['temp']},${data['rpm']}');
       }
 
       await file.writeAsString(csvData.toString());
@@ -170,7 +178,7 @@ class TelemetryProvider with ChangeNotifier {
       _savedData.clear();
       return true;
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('ERRO EM SALVAR CSV:\n${e.toString()}');
       return false;
     } finally {
       notifyListeners();
