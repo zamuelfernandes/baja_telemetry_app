@@ -94,57 +94,6 @@ class TelemetryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchData() async {
-    if (_isPaused) return;
-
-    final url = 'http://$_ip/metrics';
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        _parseData(response.body);
-      }
-    } catch (e) {
-      debugPrint('Erro ao buscar dados: $e');
-    }
-  }
-
-  void _parseData(String data) {
-    final lines = data.split('\n');
-    double speed = 0.0, temp = 0.0, rpm = 0.0;
-
-    for (var line in lines) {
-      if (line.startsWith('telemetry_speed')) {
-        speed = double.parse(line.split(' ')[1]);
-      } else if (line.startsWith('telemetry_temp')) {
-        temp = double.parse(line.split(' ')[1]);
-      } else if (line.startsWith('telemetry_rpm')) {
-        rpm = double.parse(line.split(' ')[1]);
-      }
-    }
-
-    _updateHistory(_speedHistory, speed);
-    _updateHistory(_tempHistory, temp);
-    _updateHistory(_rpmHistory, rpm);
-
-    if (_isSaving) {
-      _savedData.add({
-        'speed': speed,
-        'temp': temp,
-        'rpm': rpm,
-        'timestamp': DateTime.now().millisecondsSinceEpoch.toDouble(),
-      });
-    }
-
-    notifyListeners();
-  }
-
-  void _updateHistory(List<double> history, double newValue) {
-    history.add(newValue);
-    if (history.length > 20) {
-      history.removeAt(0);
-    }
-  }
-
   Future<bool?> _generateCsv() async {
     if (_savedData.isEmpty) return null;
 
@@ -193,4 +142,56 @@ class TelemetryProvider with ChangeNotifier {
       }
     });
   }
+
+  Future<void> fetchData() async {
+    if (_isPaused) return;
+
+    final url = 'http://$_ip/metrics';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        _parseData(response.body);
+      }
+    } catch (e) {
+      debugPrint('Erro ao buscar dados: $e');
+    }
+  }
+  
+  void _parseData(String data) {
+    final lines = data.split('\n');
+    double speed = 0.0, temp = 0.0, rpm = 0.0;
+
+    for (var line in lines) {
+      if (line.startsWith('telemetry_speed')) {
+        speed = double.parse(line.split(' ')[1]);
+      } else if (line.startsWith('telemetry_temp')) {
+        temp = double.parse(line.split(' ')[1]);
+      } else if (line.startsWith('telemetry_rpm')) {
+        rpm = double.parse(line.split(' ')[1]);
+      }
+    }
+
+    _updateHistory(_speedHistory, speed);
+    _updateHistory(_tempHistory, temp);
+    _updateHistory(_rpmHistory, rpm);
+
+    if (_isSaving) {
+      _savedData.add({
+        'speed': speed,
+        'temp': temp,
+        'rpm': rpm,
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toDouble(),
+      });
+    }
+
+    notifyListeners();
+  }
+
+  void _updateHistory(List<double> history, double newValue) {
+    history.add(newValue);
+    if (history.length > 20) {
+      history.removeAt(0);
+    }
+  }
+
 }
