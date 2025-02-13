@@ -67,6 +67,31 @@ class _DataScreenState extends State<DataScreen> {
                   color: Colors.green,
                   sizeOf: sizeOf,
                 ),
+                SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final result = await telemetry.toggleSaving();
+                        if (result.isNotEmpty) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(result)),
+                          );
+                        }
+                      },
+                      child: Text(
+                        telemetry.isSaving ? 'Baixar Dados' : 'Salvar Dados',
+                      ),
+                    ),
+                    if (telemetry.isSaving)
+                      ElevatedButton(
+                        onPressed: telemetry.cancelSaving,
+                        child: const Text('Cancelar Salvamento'),
+                      ),
+                  ],
+                ),
               ],
             ),
           ),

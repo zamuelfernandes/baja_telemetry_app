@@ -22,8 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Baja Telemetry App',
-      theme:
-      ThemeData(
+      theme: ThemeData(
         colorSchemeSeed: Colors.red,
         scaffoldBackgroundColor: Colors.white,
       ),
