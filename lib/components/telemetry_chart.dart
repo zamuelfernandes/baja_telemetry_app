@@ -21,6 +21,19 @@ class TelemetryChart extends StatefulWidget {
 }
 
 class _TelemetryChartState extends State<TelemetryChart> {
+  bool isTemp = false;
+  bool isRPM = false;
+
+  @override
+  void initState() {
+    if (widget.title == 'Temperatura (°C)') {
+      isTemp = true;
+    } else if (widget.title == 'RPM') {
+      isRPM = true;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -32,13 +45,26 @@ class _TelemetryChartState extends State<TelemetryChart> {
               '${widget.title}:',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 19,
               ),
             ),
             Text(
               ' ${widget.values.isNotEmpty ? widget.values.last : 0}',
               style: TextStyle(
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isTemp
+                    ? widget.values.isNotEmpty && widget.values.last > 85
+                        ? Colors.red[800]
+                        : Colors.green[800]
+                    : isRPM
+                        ? widget.values.isNotEmpty && widget.values.last > 3900
+                            ? Colors.red[800]
+                            : widget.values.isNotEmpty &&
+                                    widget.values.last > 2500
+                                ? Colors.yellow[800]
+                                : Colors.green[800]
+                        : Colors.brown,
               ),
             ),
           ],

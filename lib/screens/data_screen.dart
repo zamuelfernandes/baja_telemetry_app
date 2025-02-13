@@ -31,7 +31,7 @@ class _DataScreenState extends State<DataScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.red,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -42,7 +42,7 @@ class _DataScreenState extends State<DataScreen> {
             vertical: 8,
           ),
           child: SizedBox(
-            height: sizeOf.height*.8,
+            height: sizeOf.height * .8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -74,7 +74,11 @@ class _DataScreenState extends State<DataScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: telemetry.togglePause,
-        child: Icon(telemetry.isPaused ? Icons.play_arrow : Icons.pause),
+        backgroundColor: Colors.red,
+        child: Icon(
+          telemetry.isPaused ? Icons.play_arrow : Icons.pause,
+          color: Colors.white,
+        ),
       ),
     );
   }

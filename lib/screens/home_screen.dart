@@ -57,27 +57,55 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 64,
             children: [
-              const FlutterLogo(size: 100),
-              const SizedBox(height: 20),
+              Center(
+                child: Card(
+                  shape: CircleBorder(),
+                  color: Colors.white,
+                  elevation: 8,
+                  child: Image(
+                    height: MediaQuery.sizeOf(context).height * .2,
+                    image: AssetImage('assets/images/logo_baja.png'),
+                  ),
+                ),
+              ),
               TextField(
                 controller: ipController,
                 decoration: const InputDecoration(
                   labelText: 'Digite o IP',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(1000),
+                    ),
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => !runnig
                     ? _testConnection(context, ipController.text)
                     : null,
-                child: !runnig
-                    ? const Text('Conectar')
-                    : const CircularProgressIndicator(),
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(Colors.red),
+                  padding: WidgetStatePropertyAll(EdgeInsets.all(6)),
+                ),
+                child: Center(
+                  child: !runnig
+                      ? const Text(
+                          'CONECTAR',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                ),
               ),
             ],
           ),

@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Baja Telemetry App',
       theme:
       ThemeData(
-        colorSchemeSeed: Colors.redAccent
+        colorSchemeSeed: Colors.red,
+        scaffoldBackgroundColor: Colors.white,
       ),
       initialRoute: '/',
       routes: {
