@@ -189,7 +189,7 @@ class TelemetryProvider with ChangeNotifier {
     Future.delayed(Duration.zero, () async {
       while (true) {
         await fetchData();
-        await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(milliseconds: 500));
       }
     });
   }
